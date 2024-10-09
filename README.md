@@ -33,10 +33,9 @@ Connectverse is a full-stack music streaming platform built using the MERN (Mong
 3. Set up Environment Variables
 Create a .env file in the root directory and add the following:
    ```bash
-   MONGO_URI=your-mongo-db-uri
+   MONGO=your-mongo-db-uri
    JWT_SECRET=your-jwt-secret
-   GOOGLE_CLIENT_ID=your-google-client-id
-   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   VITE_FIREBASE_API_KEY=your-firebase-api-key
 4. Run the Application
    To run the development environment:
     ```bash
