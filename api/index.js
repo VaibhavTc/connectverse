@@ -5,7 +5,8 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
 import path from "path";
-dotenv.config();
+const __dirname = path.resolve();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 mongoose
   .connect(process.env.MONGO)
@@ -16,7 +17,6 @@ mongoose
     console.log(err);
   });
 
-const __dirname = path.resolve();
 const app = express();
 
 app.use(express.json());
@@ -24,10 +24,10 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
-app.use(express.static(path.join(__dirname, "/client/dist")));
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../client", "dist", "index.html"));
 });
 
 app.listen(3000, () => {

@@ -18,6 +18,7 @@ import {
   signOut,
 } from "../redux/user/userSlice";
 import { toast } from "sonner";
+import zxcvbn from "zxcvbn";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -28,15 +29,22 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
-
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [hasEnteredPassword, setHasEnteredPassword] = useState(false);
   const { currentUser, loading, error } = useSelector((state) => state.user);
+
   useEffect(() => {
     if (image) {
       handleFileUpload(image);
     }
   }, [image]);
+
   const handleFileUpload = async (image) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + image.name;
@@ -59,12 +67,27 @@ export default function Profile() {
       }
     );
   };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-    if (e.target.id === "username") {
-      checkUsernameAvailability(e.target.value);
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+
+    if (id === "username") {
+      checkUsernameAvailability(value);
+    }
+
+    if (id === "password") {
+      setHasEnteredPassword(e.target.value.length > 0);
+      checkPasswordStrength(e.target.value);
+      setIsPasswordValid(e.target.value.length >= 8);
+    }
+
+    if (id === "confirmPassword") {
+      setConfirmPassword(value);
+      setPasswordMatch(value === formData.password);
     }
   };
+
   const checkUsernameAvailability = async (username) => {
     if (!username) return;
     setCheckingUsername(true);
@@ -83,11 +106,19 @@ export default function Profile() {
     }
     setCheckingUsername(false);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (usernameAvailable === false) {
-      setError("Username is already taken");
       toast.error("Username is already taken!");
+      return;
+    }
+    if (!passwordMatch) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+    if (!isPasswordValid) {
+      toast.error("Password must be at least 8 characters long!");
       return;
     }
     try {
@@ -131,6 +162,7 @@ export default function Profile() {
       toast.error("Couldn't delete account");
     }
   };
+
   const handleSignOut = async () => {
     try {
       const res = await fetch("/api/auth/signout", { credentials: "include" });
@@ -141,9 +173,26 @@ export default function Profile() {
       }
     } catch (error) {}
   };
+
+  const checkPasswordStrength = (password) => {
+    const result = zxcvbn(password);
+    const score = result.score;
+    const strengthLevels = ["Very Weak", "Weak", "Fair", "Good", "Strong"];
+    setPasswordStrength(strengthLevels[score]);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -215,9 +264,12 @@ export default function Profile() {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Update Password"
+            placeholder="Password"
             id="password"
-            className="bg-slate-200 p-3 rounded-lg w-full"
+            required
+            className={`bg-slate-100 p-3 rounded-lg w-full ${
+              !isPasswordValid ? "border-red-500" : ""
+            }`}
             onChange={handleChange}
           />
           <span
@@ -227,7 +279,43 @@ export default function Profile() {
             {showPassword ? "Hide" : "Show"}
           </span>
         </div>
-        <button className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+        {!isPasswordValid && (
+          <p className="text-red-500 text-sm">
+            Password must be at least 8 characters long
+          </p>
+        )}
+        {hasEnteredPassword && (
+          <p
+            className={`text-sm ${
+              passwordStrength === "Weak"
+                ? "text-red-500"
+                : passwordStrength === "Fair"
+                ? "text-yellow-500"
+                : "text-green-500"
+            }`}
+          >
+            Password Strength: {passwordStrength}
+          </p>
+        )}
+        <div className="relative">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            required
+            className="bg-slate-100 p-3 rounded-lg w-full"
+            onChange={handleConfirmPasswordChange}
+          />
+          <span
+            className="absolute right-3 top-3 cursor-pointer text-slate-500"
+            onClick={toggleConfirmPasswordVisibility}
+          >
+            {showConfirmPassword ? "Hide" : "Show"}
+          </span>
+        </div>
+        <button
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Update"}
         </button>
       </form>
@@ -242,7 +330,6 @@ export default function Profile() {
           Sign out
         </span>
       </div>
-      <p className="text-red-700 mt-5">{error && "Something went wrong!"}</p>
     </div>
   );
 }
