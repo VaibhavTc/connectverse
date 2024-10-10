@@ -1,9 +1,25 @@
 import React from "react";
 const featuredArtists = [
-  { name: "Artist 1", imgSrc: "https://via.placeholder.com/150" },
-  { name: "Artist 2", imgSrc: "https://via.placeholder.com/150" },
-  { name: "Artist 3", imgSrc: "https://via.placeholder.com/150" },
-  { name: "Artist 4", imgSrc: "https://via.placeholder.com/150" },
+  {
+    name: "Artist 1",
+    imgSrc:
+      "https://images.unsplash.com/photo-1575285113814-f770cb8c796e?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Artist 2",
+    imgSrc:
+      "https://images.unsplash.com/photo-1575756985239-ad4f602904d3?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Artist 3",
+    imgSrc:
+      "https://images.unsplash.com/flagged/photo-1563551509-8db9076668cc?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    name: "Artist 4",
+    imgSrc:
+      "https://images.unsplash.com/photo-1516390204005-88dd959717c1?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
 ];
 export default function Home() {
   return (
