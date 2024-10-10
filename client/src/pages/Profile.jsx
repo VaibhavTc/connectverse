@@ -29,11 +29,9 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [hasEnteredPassword, setHasEnteredPassword] = useState(false);
@@ -80,11 +78,6 @@ export default function Profile() {
       setHasEnteredPassword(e.target.value.length > 0);
       checkPasswordStrength(e.target.value);
       setIsPasswordValid(e.target.value.length >= 8);
-    }
-
-    if (id === "confirmPassword") {
-      setConfirmPassword(value);
-      setPasswordMatch(value === formData.password);
     }
   };
 
@@ -181,16 +174,8 @@ export default function Profile() {
     setPasswordStrength(strengthLevels[score]);
   };
 
-  const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -296,23 +281,9 @@ export default function Profile() {
             Password Strength: {passwordStrength}
           </p>
         )}
-        <div className="relative">
-          <input
-            type={showConfirmPassword ? "text" : "password"}
-            placeholder="Confirm Password"
-            className="bg-slate-100 p-3 rounded-lg w-full"
-            onChange={handleConfirmPasswordChange}
-          />
-          <span
-            className="absolute right-3 top-3 cursor-pointer text-slate-500"
-            onClick={toggleConfirmPasswordVisibility}
-          >
-            {showConfirmPassword ? "Hide" : "Show"}
-          </span>
-        </div>
         <button
           className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-          disabled={loading}
+          disabled={loading || !passwordMatch}
         >
           {loading ? "Loading..." : "Update"}
         </button>
