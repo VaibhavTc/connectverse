@@ -264,9 +264,8 @@ export default function Profile() {
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Password"
+            placeholder="Update Password"
             id="password"
-            required
             className={`bg-slate-100 p-3 rounded-lg w-full ${
               !isPasswordValid ? "border-red-500" : ""
             }`}
@@ -301,7 +300,6 @@ export default function Profile() {
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
-            required
             className="bg-slate-100 p-3 rounded-lg w-full"
             onChange={handleConfirmPasswordChange}
           />
