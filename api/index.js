@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.resolve(__dirname, "client", "dist")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client", "dist", "index.html"));
