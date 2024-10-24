@@ -8,13 +8,14 @@ import dotenv from "dotenv";
 import path from "path";
 import { text } from "express";
 const __dirname = path.resolve();
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
-
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+const user = process.env.EMAIL_USER;
+const pass = process.env.EMAIL_PASS;
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "vaibhavchakole79@gmail.com",
-    pass: "frbgtafefnkyubuo",
+    user: user,
+    pass: pass,
   },
   logger: true,
   debug: true,
@@ -65,8 +66,6 @@ export const signup = async (req, res, next) => {
 export const verifyEmail = async (req, res, next) => {
   try {
     const { token, email } = req.query;
-
-    console.log(`Token: ${token}, Email: ${email}`);
     const user = await User.findOne({ email, verificationToken: token });
     if (!user) {
       return res.status(400).json({
