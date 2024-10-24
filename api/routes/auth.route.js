@@ -6,6 +6,7 @@ import {
   signout,
   checkUsername,
   checkEmail,
+  verifyEmail,
 } from "../controllers/auth.controller.js";
 const router = express.Router();
 router.post("/signup", signup);
@@ -14,4 +15,5 @@ router.post("/google", google);
 router.get("/signout", signout);
 router.post("/check-username", checkUsername);
 router.post("/check-email", checkEmail);
+router.get("/verify-email", verifyEmail);
 export default router;

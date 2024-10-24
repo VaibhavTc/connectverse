@@ -134,7 +134,9 @@ export default function SignUp() {
         toast.error("Something went wrong!");
         return;
       }
-      toast.success("Signup successful!");
+      toast.success(
+        "Signup successful! Please check your email to verify your account."
+      );
       navigate("/sign-in");
     } catch (error) {
       setLoading(false);
